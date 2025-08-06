@@ -12,6 +12,3 @@ cylinder.GetRadiusAttr().Set(8)
 cylinder.GetHeightAttr().Set(1.5)
 
 stage.Save()
-
-
-

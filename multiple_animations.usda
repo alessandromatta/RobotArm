@@ -7,8 +7,8 @@
                 double radius = 500
             }
             dictionary Perspective = {
-                double3 position = (-34.79145697142622, 68.2824221267212, 16.00298859694305)
-                double3 target = (-11.636786513330872, 5.443606623397081, 12.967742344089938)
+                double3 position = (-0.3934453010801495, 107.84044972346719, 14.451214725824704)
+                double3 target = (-13.738322759068515, -140.80179417748832, -2.0399115089879434)
             }
             dictionary Right = {
                 double3 position = (0, -50000, 0)
@@ -28,7 +28,11 @@
             double voxelCeiling = 460
         }
         dictionary omni_layer = {
-            string authoring_layer = "./robot.usda"
+            string authoring_layer = "./multiple_animations.usda"
+            dictionary locked = {
+            }
+            dictionary muteness = {
+            }
         }
         dictionary renderSettings = {
             float3 "rtx:debugView:pixelDebug:textColor" = (0, 1e18, 0)
@@ -65,125 +69,63 @@
             float3 "rtx:sceneDb:ambientLightColor" = (0.1, 0.1, 0.1)
         }
     }
+    defaultPrim = "World"
+    endTimeCode = 192
+    metersPerUnit = 0.01
+    startTimeCode = 1
+    timeCodesPerSecond = 60
     upAxis = "Z"
 )
 
-def Xform "Robot"
+def Xform "World"
+{
+}
+
+def Xform "Ground" (
+    prepend references = @omniverse://localhost/Projects/RobotArm/animated_robot.usda@</Ground>
+)
 {
     float3 xformOp:rotateXYZ = (0, 0, 0)
     float3 xformOp:scale = (1, 1, 1)
     double3 xformOp:translate = (0, 0, 0)
-    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
+}
 
-    def Xform "Base" (
-        prepend apiSchemas = ["MaterialBindingAPI"]
-        prepend references = @omniverse://localhost/Projects/RobotArm/Assets/base.usda@</Base>
+def Xform "OriginalRobot"
+{
+    def Xform "AnimatedRobot" (
+        prepend references = @omniverse://localhost/Projects/RobotArm/animated_robot.usda@</AnimatedRobot>
     )
     {
-        rel material:binding = None (
-            bindMaterialAs = "weakerThanDescendants"
-        )
+        float3 xformOp:rotateXYZ = (0, 0, 0)
+        float3 xformOp:scale = (1, 1, 1)
+        double3 xformOp:translate = (20, 0, 0)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
+    }
+}
+
+def Xform "ShiftedRobot"
+{
+    def Xform "AnimatedRobot" (
+        prepend references = @omniverse://localhost/Projects/RobotArm/animated_robot.usda@</AnimatedRobot> (offset = 48)
+    )
+    {
         float3 xformOp:rotateXYZ = (0, 0, 0)
         float3 xformOp:scale = (1, 1, 1)
         double3 xformOp:translate = (0, 0, 0)
         uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
-
-        over "Geometry" (
-            prepend apiSchemas = ["MaterialBindingAPI"]
-        )
-        {
-            rel material:binding = </Robot/Looks/_World_Looks_Black_Paint_01> (
-                bindMaterialAs = "weakerThanDescendants"
-            )
-        }
-    }
-
-    def Xform "LowerArm" (
-        prepend apiSchemas = ["MaterialBindingAPI"]
-        prepend references = @omniverse://localhost/Projects/RobotArm/Assets/lower_arm.usda@</LowerArm>
-    )
-    {
-        rel material:binding = </Robot/Looks/_World_Looks_Orange_Paint_02> (
-            bindMaterialAs = "weakerThanDescendants"
-        )
-        float3 xformOp:rotateXYZ = (0, 0, 0)
-        float3 xformOp:scale = (1, 1, 1)
-        double3 xformOp:translate = (0, 0, 5.5)
-        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
-    }
-
-    def Xform "UpperArm" (
-        prepend references = @omniverse://localhost/Projects/RobotArm/Assets/upper_arm.usda@</UpperArm>
-    )
-    {
-        float3 xformOp:rotateXYZ = (0, -22.5, 0)
-        float3 xformOp:scale = (1, 1, 1)
-        double3 xformOp:translate = (-1.8, 0, 14.32)
-        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
-
-        over "Geometry" (
-            prepend apiSchemas = ["MaterialBindingAPI"]
-        )
-        {
-            rel material:binding = </Robot/Looks/_World_Looks_Orange_Paint_02> (
-                bindMaterialAs = "weakerThanDescendants"
-            )
-            float3 xformOp:rotateXYZ = (-1.499204, -0.8773044, -1.084126)
-            float3 xformOp:scale = (1, 1, 5)
-            double3 xformOp:translate = (0, 0, 0)
-            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
-        }
-    }
-
-    def Xform "Gripper" (
-        prepend apiSchemas = ["MaterialBindingAPI"]
-        prepend references = [
-            @omniverse://localhost/Projects/RobotArm/Assets/base.usda@</Gripper>,
-            @omniverse://localhost/Projects/RobotArm/Assets/gripper.usda@</Gripper>
-        ]
-    )
-    {
-        rel material:binding = </Robot/Looks/_World_Looks_GlossyMetal_A_01> (
-            bindMaterialAs = "weakerThanDescendants"
-        )
-        float3 xformOp:rotateXYZ = (0, 0, 0)
-        float3 xformOp:scale = (1, 1, 1)
-        double3 xformOp:translate = (-4, 0, 19.5)
-        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
-
-        over "Geometry" (
-            prepend apiSchemas = ["MaterialBindingAPI"]
-        )
-        {
-            rel material:binding = </Robot/Looks/_World_Looks_GlossyMetal_C_01> (
-                bindMaterialAs = "weakerThanDescendants"
-            )
-        }
-    }
-
-    def Scope "Looks"
-    {
-        def "_World_Looks_Black_Paint_01" (
-            prepend references = @file:/C:/Users/admin/Desktop/OpenUSD_Lab-Assets/OpenUSD_Lab-Assets/OpenUSD_Lab/Materials/Materials_Samples.usd@</World/Looks/Black_Paint_01>
-        )
-        {
-        }
-
-        def "_World_Looks_Orange_Paint_02" (
-            prepend references = @file:/C:/Users/admin/Desktop/OpenUSD_Lab-Assets/OpenUSD_Lab-Assets/OpenUSD_Lab/Materials/Materials_Samples.usd@</World/Looks/Orange_Paint_02>
-        )
-        {
-        }
-
-        def "_World_Looks_GlossyMetal_C_01" (
-            prepend references = @file:/C:/Users/admin/Desktop/OpenUSD_Lab-Assets/OpenUSD_Lab-Assets/OpenUSD_Lab/Materials/Materials_Samples.usd@</World/Looks/GlossyMetal_C_01>
-        )
-        {
-        }
     }
 }
 
-def "World"
+def Xform "SpeedRobot"
 {
+    def Xform "AnimatedRobot" (
+        prepend references = @omniverse://localhost/Projects/RobotArm/animated_robot.usda@</AnimatedRobot> (scale = 0.5)
+    )
+    {
+        float3 xformOp:rotateXYZ = (0, 0, 0)
+        float3 xformOp:scale = (1, 1, 1)
+        double3 xformOp:translate = (-20, 0, 0)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
+    }
 }
 
